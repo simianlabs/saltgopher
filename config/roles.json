@@ -1,0 +1,11 @@
+{
+  "users": [
+    {
+      "id": "ADMINSALCKUID",
+      "roles": [
+        "gopheradmin",
+        "saltadmin"
+      ]
+    }
+  ]
+}
