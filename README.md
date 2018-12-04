@@ -104,7 +104,7 @@ SaltGopher will add user if don't exist in file when adding role with **set role
 
 #### Pre-builded packages
 
-Not available at the moment.
+limited packages available: https://github.com/simianlabs/saltgopher/releases
 
 ### Maintainer
 Dev: Stefan Monko || smonko@simianlabs.io  
