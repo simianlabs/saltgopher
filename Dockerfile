@@ -2,6 +2,9 @@ FROM golang:alpine
 RUN mkdir /app 
 ADD . /app/
 WORKDIR /app 
+RUN apk update && \
+    apk upgrade && \
+    apk add git
 RUN go get github.com/nlopes/slack && \
     go get github.com/Jeffail/gabs
 RUN go build -o saltgopher .
