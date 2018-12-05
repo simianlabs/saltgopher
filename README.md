@@ -1,16 +1,17 @@
 ![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)  
-![version](https://img.shields.io/badge/Version-0.2.0-brightgreen.svg)  
+![version](https://img.shields.io/badge/Version-0.2.1-brightgreen.svg)  
 
 <img src="saltgopher.png" width="250">
 
 # Salt Gopher
 Simple chatbot written in Go to help you manage your SaltStack infrastructure from slack.
 
-Current version: `0.2.0` available features:
+Current version: `0.2.1` available features:
 
 * Basic help 
 * Simple role management  
 * Executing jobs on salt-minions
+* Respond to direct message
 
 Currently in development or planned:
 * Complex role management
@@ -19,12 +20,22 @@ Currently in development or planned:
 * Aliases
 * Support for runners and wheels
 * Support for listing jobs and minions
+* Slash commands
+* Channel listener
+* Auto deployments (GCP, Heroku, AWS ...)
 * and more...
 
 
 ### Install SaltGopher to your slack workspace
 
+Use SaltGopher install page: http://saltgopher.simianlabs.io
+
+or
+
 <a href="https://slack.com/oauth/authorize?client_id=418342024391.489186556466&scope=bot,chat:write:bot,incoming-webhook,files:write:user,users.profile:read"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+
+`Add page will get you bot token require to run your SaltGopher instance.`  
+Alternatively you can just add generic bot to your slack and use his token.
 
 ### Configure your SaltGopher
 
@@ -66,6 +77,14 @@ $ go build -o saltgopher
 $ ./saltgopher
 ```
 
+#### Running as service
+* Use saltgopher.service located in service directory in this repo and place it to /etc/systemd/system on your host.
+* Modify as required, create runtime user and place binaries and config directory to runtime directory of service.
+* Enable and run it:
+```bash
+$ systemctl enable saltgopher
+$ systemctl start saltgopher
+```
 ### SaltStack execution
 SaltGopher listen for standard Salt command syntax:
 ```

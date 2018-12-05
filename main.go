@@ -12,7 +12,7 @@ import (
 
 const (
 	configFileName = "config/config.json"
-	version        = "0.2.0"
+	version        = "0.2.1"
 	rolesFileName  = "config/roles.json"
 	adminRoleName  = "saltadmin"
 )
