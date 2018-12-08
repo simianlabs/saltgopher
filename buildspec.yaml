@@ -4,6 +4,11 @@ phases:
   install: 
     commands:
       - go get -u github.com/golang/lint/golint
+      - curl https://glide.sh/get | sh
+
+  pre_build:
+    commands:
+      - glide up
 
   build:
     commands:
