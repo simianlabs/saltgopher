@@ -1,4 +1,5 @@
-![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)  
+![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)   
+![version](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiWTRwQmQ0a0M5Tjc5WTlsTHBEdmsxU0E2WjZmY0xvdWZ4WERZTmtaQTUzSHR6M3FGazF1bWNLUjFuQ2p0RUk4d0JJa0NVZXZMaWJBVmI2dFVrSmc0T0NRPSIsIml2UGFyYW1ldGVyU3BlYyI6IjFpUTNuOTJqOVBacFBoREMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)  
 ![version](https://img.shields.io/badge/Version-0.2.2-brightgreen.svg)  
 
 <img src="saltgopher.png" width="250">
@@ -77,7 +78,7 @@ Get and build SaltGopher:
 ```bash
 $ go get github.com/simianlabs/saltgopher
 
-$ dep ensure
+$ glide up
 
 $ go build -o saltgopher
 
