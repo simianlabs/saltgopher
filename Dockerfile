@@ -8,8 +8,8 @@ RUN apk update && \
     go get github.com/nlopes/slack && \
     go get github.com/Jeffail/gabs && \
     go build -o saltgopher .  && \
-    mv config.json.example config.json && \
-    mv roles.json.example roles.json && \
+    mv config/config.json.example config/config.json && \
+    mv config/roles.json.example config/roles.json && \
     adduser -S -D -H -h /app saltgopher
 USER saltgopher
 CMD ["./saltgopher"]
