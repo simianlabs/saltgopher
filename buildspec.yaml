@@ -19,7 +19,7 @@ phases:
       - echo Copy source files into GOPATH
       - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
       - cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
-      - glide up
+      - cd ${GOPATH}/src/${PACKAGE} && glide up
 
   build:
     commands:
