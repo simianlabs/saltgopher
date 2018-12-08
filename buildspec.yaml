@@ -23,7 +23,8 @@ phases:
 
   build:
     commands:
-      - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/saltgopher . 
+      - ls -laR ${GOPATH}/src/
+      # - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/saltgopher . 
 
   post_build:
     commands:
