@@ -1,12 +1,12 @@
 ![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)  
-![version](https://img.shields.io/badge/Version-0.2.1-brightgreen.svg)  
+![version](https://img.shields.io/badge/Version-0.2.2-brightgreen.svg)  
 
 <img src="saltgopher.png" width="250">
 
 # Salt Gopher
 Simple chatbot written in Go to help you manage your SaltStack infrastructure from slack.
 
-Current version: `0.2.1` available features:
+Current version: `0.2.2` available features:
 
 * Basic help 
 * Simple role management  
@@ -71,10 +71,18 @@ For easier configuration mount /app/config to your host filesystem.
 $ docker run -d --name saltgopher -v /var/saltgopher:/app/config simianlabs/saltgopher
 ```
 
-You can build your own instance if you have Go environment available adn use systemd or superviso to run your instance.
+You can build your own instance if you have Go environment available and use systemd or supervisor to run your instance.
+
+Get and build SaltGopher:
 ```bash
+$ go get github.com/simianlabs/saltgopher
+
+$ dep ensure
+
 $ go build -o saltgopher
+
 $ ./saltgopher
+
 ```
 
 #### Running as service

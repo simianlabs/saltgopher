@@ -2,3 +2,6 @@
 /bin
 /buildgopher
 /buildgopher.sh
+/config/.DS_Store
+/config/roles.json
+/config/config.json
