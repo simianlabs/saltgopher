@@ -11,21 +11,22 @@ phases:
       - sudo add-apt-repository ppa:masterminds/glide 
       - sudo apt-get update
       - sudo apt-get install -y glide
+      - glide up
 
-  pre_build:
-    commands:
-      - echo Create dir in GOPATH for sources
-      - mkdir -p ${GOPATH}/src/${PACKAGE}
-      - echo Copy source files into GOPATH
-      - echo cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
-      - cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
-      - ls -la ${GOPATH}/src/${PACKAGE}
-      - cd ${GOPATH}/src/${PACKAGE} && glide up
+  # pre_build:
+  #   commands:
+  #     - echo Create dir in GOPATH for sources
+  #     - mkdir -p ${GOPATH}/src/${PACKAGE}
+  #     - echo Copy source files into GOPATH
+  #     - echo cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
+  #     - cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
+  #     - ls -la ${GOPATH}/src/${PACKAGE}
+  #     - cd ${GOPATH}/src/${PACKAGE} && glide up
 
   build:
     commands:
-      - ls -laR ${GOPATH}/src/
-      # - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/saltgopher . 
+      - ls -la
+      - go build -o saltgopher . 
 
   post_build:
     commands:
