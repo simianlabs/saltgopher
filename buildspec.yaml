@@ -5,6 +5,10 @@ phases:
     commands:
       - go get -u github.com/golang/lint/golint
       - go get -u github.com/golang/dep/cmd/dep
+      - mkdir -p $GOPATH/src/saltgopher
+
+  pre-build:
+      - ls -la
       - dep ensure
 
   build:
