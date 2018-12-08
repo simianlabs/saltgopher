@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - echo Build start on `date`
+      - go get github.com/nlopes/slack
+      - go get github.com/Jeffail/gabs
+      - go build -o saltgopher . 
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - build/saltgopher
+  discard-paths: yes
