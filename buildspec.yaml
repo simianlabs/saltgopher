@@ -4,8 +4,8 @@ phases:
   install: 
     commands:
       - go get -u github.com/golang/lint/golint
-      - go get github.com/nlopes/slack
-      - go get github.com/Jeffail/gabs
+      - go get -u github.com/golang/dep/cmd/dep
+      - dep ensure
 
   build:
     commands:
