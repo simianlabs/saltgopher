@@ -1,0 +1,4 @@
+package: github.com/simianlabs/saltgopher
+import:
+- package: github.com/Jeffail/gabs
+- package: github.com/nlopes/slack

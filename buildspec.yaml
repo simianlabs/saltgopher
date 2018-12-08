@@ -1,11 +1,17 @@
 version: 0.2
 
+environment_variables:
+  plaintext:
+    PACKAGE: "github.com/simianlabs/saltgopher"
+
 phases:
   install: 
     commands:
       - go get -u github.com/golang/lint/golint
-      - go get github.com/nlopes/slack
-      - go get github.com/Jeffail/gabs
+      - sudo add-apt-repository ppa:masterminds/glide 
+      - sudo apt-get update
+      - sudo apt-get install -y glide
+      - glide up
 
   build:
     commands:
