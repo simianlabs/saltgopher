@@ -17,8 +17,9 @@ phases:
       - echo Create dir in GOPATH for sources
       - mkdir -p ${GOPATH}/src/${PACKAGE}
       - echo Copy source files into GOPATH
-      - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
-      - cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+      - echo cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
+      - cp -a ${CODEBUILD_SRC_DIR}/*  ${GOPATH}/src/${PACKAGE}
+      - ls -la ${GOPATH}/src/${PACKAGE}
       - cd ${GOPATH}/src/${PACKAGE} && glide up
 
   build:
