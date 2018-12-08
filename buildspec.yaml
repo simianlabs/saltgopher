@@ -8,6 +8,7 @@ phases:
       - mkdir -p $GOPATH/src/saltgopher
 
   pre-build:
+    commands:
       - ls -la
       - dep ensure
 
