@@ -1,5 +1,9 @@
 version: 0.2
 
+environment_variables:
+  plaintext:
+    PACKAGE: "github.com/simianlabs/saltgopher"
+
 phases:
   install: 
     commands:
@@ -10,11 +14,16 @@ phases:
 
   pre_build:
     commands:
-      - glide install
+      - echo Create dir in GOPATH for sources
+      - mkdir -p ${GOPATH}/src/${PACKAGE}
+      - echo Copy source files into GOPATH
+      - echo cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+      - cp -a ${CODEBUILD_SRC_DIR}/.  ${GOPATH}/src/${PACKAGE}
+      - glide up
 
   build:
     commands:
-      - go build -o saltgopher . 
+      - cd ${GOPATH}/src/${PACKAGE} && go build -o ${CODEBUILD_SRC_DIR}/saltgopher . 
 
   post_build:
     commands:
