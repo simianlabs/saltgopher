@@ -1,16 +1,21 @@
 version: 0.2
 
 phases:
-  build:
+  install: 
     commands:
-      - echo Build start on `date`
+      - go get -u github.com/golang/lint/golint
       - go get github.com/nlopes/slack
       - go get github.com/Jeffail/gabs
+
+  build:
+    commands:
       - go build -o saltgopher . 
+
   post_build:
     commands:
       - echo Build completed on `date`
+
 artifacts:
   files:
-    - build/saltgopher
+    - saltgopher
   discard-paths: yes
