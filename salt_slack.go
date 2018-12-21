@@ -68,32 +68,42 @@ func newSaltResponse(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) 
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
+		if resp == nil {
+			fmt.Printf("Client failed with nil: %v", err)
+			errorMsg := "*Gopher Panic!* \nI think I might run into trouble: \n`" + err.Error() + "`"
+			fmt.Println(errorMsg)
+			rtm.SendMessage(rtm.NewOutgoingMessage(errorMsg, msg.Channel))
 
-		body, _ := ioutil.ReadAll(resp.Body)
+		} else {
 
-		// A bit formating for nicer slack output:
-		jsonParsed, err := gabs.ParseJSON(body)
-		bodyFormated := jsonParsed.StringIndent("", "  ")
-		if len(arg) == 0 {
-			arg = "-none-"
-		}
-		if len(kwargs) == 0 {
-			kwargs = "{ none }"
-		}
-		// Build slack massage and add result as attachment
-		attachment := slack.Attachment{
-			Pretext: "Your execution results:",
-			Text:    "Job: `" + mod + "` on `" + tgt + "` with arguments: `" + arg + "` and kwargs: ```" + kwargs + "```",
+			body, _ := ioutil.ReadAll(resp.Body)
 
-			Fields: []slack.AttachmentField{
-				slack.AttachmentField{
-					Value: bodyFormated,
+			// A bit formating for nicer slack output:
+			jsonParsed, err := gabs.ParseJSON(body)
+			if err != nil {
+				fmt.Println("Error:", err)
+			}
+			bodyFormated := jsonParsed.StringIndent("", "  ")
+			if len(arg) == 0 {
+				arg = "-none-"
+			}
+			if len(kwargs) == 0 {
+				kwargs = "{ none }"
+			}
+			// Build slack massage and add result as attachment
+			attachment := slack.Attachment{
+				Pretext: "Your execution results:",
+				Text:    "Job: `" + mod + "` on `" + tgt + "` with arguments: `" + arg + "` and kwargs: ```" + kwargs + "```",
+
+				Fields: []slack.AttachmentField{
+					slack.AttachmentField{
+						Value: bodyFormated,
+					},
 				},
-			},
+			}
+
+			rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
 		}
-
-		rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
-
 	} else {
 		response := "Sorry *" + sendingUser.RealName + "*, but you don't have role to run this job.\nMost likely you will have to contact your admin to sort you out!"
 		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))

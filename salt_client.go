@@ -33,6 +33,7 @@ func (c *saltClient) executeJob(job saltJobPostData) (*http.Response, error) {
 	resp, err := c.Connector.post("", []byte(jobData))
 	if err != nil {
 		fmt.Println("Error while sending job execution:", err)
+		return nil, err
 	}
 	return resp, nil
 
@@ -54,6 +55,7 @@ func (c *saltClient) sentJob(job saltJobPostData) (*http.Response, error) {
 	resp, err := c.Connector.post("/minions", []byte(jobData))
 	if err != nil {
 		fmt.Println("Error while sending job to minions:", err)
+		return nil, err
 	}
 	return resp, nil
 

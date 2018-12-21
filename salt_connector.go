@@ -77,7 +77,11 @@ func (c *saltConnector) post(endpoint string, data []byte) (*http.Response, erro
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
-		fmt.Printf("Client failed: %v", err)
+		fmt.Printf("Client POST failed: %v", err)
+		return nil, err
+	}
+	if resp == nil {
+		fmt.Printf("Client POST failed with nil: %v", err)
 		return nil, err
 	}
 
@@ -117,11 +121,11 @@ func (c *saltConnector) get(endpoint string) (*http.Response, error) {
 
 	resp, err := c.Client.Do(req)
 	if err != nil {
-		fmt.Printf("Client failed: %v", err)
+		fmt.Printf("Client GET failed: %v", err)
 		return nil, err
 	}
 	if resp == nil {
-		fmt.Printf("Client failed with nil: %v", err)
+		fmt.Printf("Client GET failed with nil: %v", err)
 		return nil, err
 	}
 
