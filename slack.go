@@ -223,8 +223,16 @@ func botHelp(rtm *slack.RTM, msg *slack.MessageEvent) {
 				Value: "Send job to SaltMaster via salt-api and wait for result.",
 			},
 			slack.AttachmentField{
+				Title: "\"Get minions info\"",
+				Value: "Get detailed informations about all minions",
+			},
+			slack.AttachmentField{
+				Title: "\"List minions\"",
+				Value: "Display list of minions with basic informations",
+			},
+			slack.AttachmentField{
 				Title: "\"set role ROLENAME to @USER\"",
-				Value: "Add role to user. (Only *adminsalt* and *gopheradmin* are in use!)",
+				Value: "Add role to user.\n*gopheradmin* - SaltGopher manangement, assign roles etc.\n*saltadmin - Free to use all Salt functionality\n*saltviewer* - Can list jobs and minions info",
 			},
 			slack.AttachmentField{
 				Title: "\"Show my roles\"",
