@@ -134,9 +134,16 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 		"testmsg": true,
 	}
 
+	// Salt subcommands
 	saltMatch, _ := regexp.MatchString("^salt *", text)
-	setRoleMatch, _ := regexp.MatchString("^set role [a-z0-9A-Z]+ to *", text)
 	fmt.Println("Salt match", saltMatch)
+
+	acceptedSaltGetMinionInfo := map[string]bool{
+		"get minions info": true,
+	}
+
+	// Role subcommands
+	setRoleMatch, _ := regexp.MatchString("^set role [a-z0-9A-Z]+ to *", text)
 	fmt.Println("Role match", setRoleMatch)
 
 	if saltMatch {
@@ -154,6 +161,12 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 		}
 		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
 		// setRoleMatch = false
+
+	} else if acceptedSaltGetMinionInfo[text] {
+
+		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
+		getMinionInfo(rtm, msg, config)
+		// saltMatch = false
 
 	} else if acceptedRoles[text] {
 

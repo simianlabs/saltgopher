@@ -29,6 +29,18 @@ func checkForSaltAdmin(user userInfo) bool {
 	return adminFound
 }
 
+func checkForSaltViewer(user userInfo) bool {
+	viewerFound := false
+
+	for _, role := range returnRolesForUser(user) {
+		if role == viewRoleName {
+			viewerFound = true
+			break
+		}
+	}
+	return viewerFound
+}
+
 // Respond to new salt related command
 func newSaltResponse(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 

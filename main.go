@@ -12,9 +12,10 @@ import (
 
 const (
 	configFileName = "config/config.json"
-	version        = "0.2.2"
+	version        = "0.3.0"
 	rolesFileName  = "config/roles.json"
 	adminRoleName  = "saltadmin"
+	viewRoleName   = "saltviewer"
 )
 
 type botConfig struct {

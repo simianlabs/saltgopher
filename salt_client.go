@@ -58,3 +58,14 @@ func (c *saltClient) sentJob(job saltJobPostData) (*http.Response, error) {
 	return resp, nil
 
 }
+
+//get minions info
+func (c *saltClient) getMinionsInfo() (*http.Response, error) {
+	resp, err := c.Connector.get("/minions")
+	if err != nil {
+		fmt.Println("Error while getting minions info:", err)
+		return nil, err
+	}
+	return resp, nil
+
+}

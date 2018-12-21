@@ -120,6 +120,10 @@ func (c *saltConnector) get(endpoint string) (*http.Response, error) {
 		fmt.Printf("Client failed: %v", err)
 		return nil, err
 	}
+	if resp == nil {
+		fmt.Printf("Client failed with nil: %v", err)
+		return nil, err
+	}
 
 	// Check for response code. all 2** are ok, others not
 	if match, _ := regexp.MatchString("2[0-9]*", string(resp.StatusCode)); match {
