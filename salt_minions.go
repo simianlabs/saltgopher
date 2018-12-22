@@ -256,7 +256,6 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 				rtm.PostMessage(sendingUser.ID, slack.MsgOptionAttachments(attachment))
 
 			}
-
 		}
 
 	} else {
@@ -301,7 +300,7 @@ func listMinions(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 
 				attachment := slack.Attachment{
 					Text:  "`" + minionID + "`",
-					Color: "#36a64f",
+					Color: "#ffff66",
 
 					Fields: []slack.AttachmentField{
 						slack.AttachmentField{
@@ -314,7 +313,7 @@ func listMinions(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 							Value: "*IPv4*: \n  -  " + strings.Join(details.Ipv4, "\n  -  "),
 						},
 						slack.AttachmentField{
-							Value: "*OS Details*: " + details.Os + "||" + details.OsFamily + "||" + details.Osrelease,
+							Value: "*OS Details*: " + details.OsFamily + " || " + details.Os + " || " + details.Osrelease,
 						},
 						slack.AttachmentField{
 							Value: "*Python Version*: " + pythonversion,
@@ -324,7 +323,6 @@ func listMinions(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 
 				rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
 			}
-
 		}
 
 	} else {

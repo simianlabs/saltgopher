@@ -144,6 +144,7 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 
 	acceptedSaltListMinions := map[string]bool{
 		"get minions list": true,
+		"list minions":     true,
 	}
 
 	// Role subcommands
