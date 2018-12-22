@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"strings"
 
 	"github.com/nlopes/slack"
@@ -139,7 +138,7 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 			fmt.Println("Error:", err)
 		}
 
-		resp, err := cl.getMinionsInfo()
+		resp, err := cl.getMinionsInfo("")
 		if err != nil {
 			fmt.Println("Error:", err)
 		}
@@ -165,12 +164,11 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 				gputotal := fmt.Sprintf("%v", details.NumGpus)
 				memtotal := fmt.Sprintf("%v", details.MemTotal)
 
-				pythonversion := fmt.Sprintf("%v", details.Pythonversion)
-				pvs := strings.Fields(pythonversion)
-				pythonversion = strings.Join(pvs, ".")
+				pythonversion := interfaceToString(".", details.Pythonversion)
 
 				attachment := slack.Attachment{
-					Text: "`" + minionID + "`",
+					Text:  "`" + minionID + "`",
+					Color: "#3399ff",
 
 					Fields: []slack.AttachmentField{
 						slack.AttachmentField{
@@ -241,7 +239,7 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 							Value: "*Python Path*:\n - " + strings.Join(details.Pythonpath, "\n - "),
 						},
 						slack.AttachmentField{
-							Value: "*Python Version*:\n - " + pythonversion,
+							Value: "*Python Version*: " + pythonversion,
 						},
 						slack.AttachmentField{
 							Value: "*Salt path*: " + details.Saltpath,
@@ -256,7 +254,7 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 				}
 
 				rtm.PostMessage(sendingUser.ID, slack.MsgOptionAttachments(attachment))
-				// rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
+
 			}
 
 		}
@@ -267,8 +265,70 @@ func getMinionInfo(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 	}
 }
 
-func parseResponse(resp *http.Response) (*[]byte, error) {
-	defer resp.Body.Close()
-	data, err := ioutil.ReadAll(resp.Body)
-	return &data, err
+func listMinions(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
+
+	sendingUser := getUserInfo(rtm, msg.User)
+
+	if checkForSaltAdmin(sendingUser) || checkForSaltViewer(sendingUser) {
+		cl, err := newSaltClient(config)
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+
+		resp, err := cl.getMinionsInfo("")
+		if err != nil {
+			fmt.Println("Error:", err)
+		}
+		if resp == nil {
+			fmt.Printf("Client failed with nil: %v", err)
+			errorMsg := "*Gopher Panic!* \nI think I might run into trouble: \n`" + err.Error() + "`"
+			fmt.Println(errorMsg)
+			rtm.SendMessage(rtm.NewOutgoingMessage(errorMsg, msg.Channel))
+
+		} else {
+
+			body, _ := ioutil.ReadAll(resp.Body)
+
+			m := minionsResponse{}
+
+			err = json.Unmarshal(body, &m)
+
+			rtm.SendMessage(rtm.NewOutgoingMessage("Here are your minions.", msg.Channel))
+
+			for minionID, details := range m.Minions[0] {
+
+				pythonversion := interfaceToString(".", details.Pythonversion)
+
+				attachment := slack.Attachment{
+					Text:  "`" + minionID + "`",
+					Color: "#36a64f",
+
+					Fields: []slack.AttachmentField{
+						slack.AttachmentField{
+							Value: "*Version*: " + details.Saltversion,
+						},
+						slack.AttachmentField{
+							Value: "*FQDN*: " + details.Fqdn,
+						},
+						slack.AttachmentField{
+							Value: "*IPv4*: \n  -  " + strings.Join(details.Ipv4, "\n  -  "),
+						},
+						slack.AttachmentField{
+							Value: "*OS Details*: " + details.Os + "||" + details.OsFamily + "||" + details.Osrelease,
+						},
+						slack.AttachmentField{
+							Value: "*Python Version*: " + pythonversion,
+						},
+					},
+				}
+
+				rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
+			}
+
+		}
+
+	} else {
+		response := "Sorry *" + sendingUser.RealName + "*, but you don't have role to run this job.\nMost likely you will have to contact your admin to sort you out!"
+		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
+	}
 }

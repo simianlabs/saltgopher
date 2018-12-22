@@ -142,6 +142,10 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 		"get minions info": true,
 	}
 
+	acceptedSaltListMinions := map[string]bool{
+		"get minions list": true,
+	}
+
 	// Role subcommands
 	setRoleMatch, _ := regexp.MatchString("^set role [a-z0-9A-Z]+ to *", text)
 	fmt.Println("Role match", setRoleMatch)
@@ -150,7 +154,6 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 
 		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
 		newSaltResponse(rtm, msg, config)
-		// saltMatch = false
 
 	} else if setRoleMatch {
 
@@ -160,13 +163,16 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 			response = "You are not *Gopher admin*!\nI can't allow you to this, unfortunately."
 		}
 		rtm.SendMessage(rtm.NewOutgoingMessage(response, msg.Channel))
-		// setRoleMatch = false
 
 	} else if acceptedSaltGetMinionInfo[text] {
 
 		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
 		getMinionInfo(rtm, msg, config)
-		// saltMatch = false
+
+	} else if acceptedSaltListMinions[text] {
+
+		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
+		listMinions(rtm, msg, config)
 
 	} else if acceptedRoles[text] {
 
@@ -206,8 +212,11 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 func botHelp(rtm *slack.RTM, msg *slack.MessageEvent) {
 
 	attachment := slack.Attachment{
-		Pretext: "This are few things I can help you with:",
-		Text:    " _Commands are not case sensitive._",
+		Pretext:    "This are few things I can help you with:",
+		Text:       " _Commands are not case sensitive._",
+		Color:      "#4dd2ff",
+		Footer:     "SaltGopher",
+		FooterIcon: "https://github.com/simianlabs/saltgopher/raw/master/saltgopher.png",
 
 		Fields: []slack.AttachmentField{
 			slack.AttachmentField{

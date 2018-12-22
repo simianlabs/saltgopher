@@ -1,18 +1,19 @@
 ![Docker Automated build](https://img.shields.io/docker/automated/jrottenberg/ffmpeg.svg)   
 ![version](https://codebuild.eu-west-1.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiWTRwQmQ0a0M5Tjc5WTlsTHBEdmsxU0E2WjZmY0xvdWZ4WERZTmtaQTUzSHR6M3FGazF1bWNLUjFuQ2p0RUk4d0JJa0NVZXZMaWJBVmI2dFVrSmc0T0NRPSIsIml2UGFyYW1ldGVyU3BlYyI6IjFpUTNuOTJqOVBacFBoREMiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)  
-![version](https://img.shields.io/badge/Version-0.2.2-brightgreen.svg)  
+![version](https://img.shields.io/badge/Version-0.3.0-brightgreen.svg)  
 
 <img src="saltgopher.png" width="250">
 
 # Salt Gopher
 Simple chatbot written in Go to help you manage your SaltStack infrastructure from slack.
 
-Current version: `0.2.2` available features:
+Current version: `0.3.0` available features:
 
 * Basic help 
 * Simple role management  
 * Executing jobs on salt-minions
 * Respond to direct message
+* Minions listing and details
 
 Currently in development or planned:
 * Complex role management
@@ -20,7 +21,7 @@ Currently in development or planned:
   * Same principle as SaltStack itself have
 * Aliases
 * Support for runners and wheels
-* Support for listing jobs and minions
+* Support for listing jobs
 * Slash commands
 * Channel listener
 * Auto deployments (GCP, Heroku, AWS ...)
@@ -105,6 +106,7 @@ salt “target” module.function argument {kwargs}
 
 Current version have only simple role management.
 To be able execute salt commands user have to have `saltadmin` role.
+To be able to list minions and jobs user have to have `saltviewer role.
 
 Roles are stored in config/roles.json
 ```json
@@ -114,7 +116,7 @@ Roles are stored in config/roles.json
       "id": "SLACKUID",
       "roles": [
         "gopheradmin",
-        "saltadmin"
+        "saltadmin",
       ]
     }
   ]
@@ -132,7 +134,7 @@ SaltGopher will add user if don't exist in file when adding role with **set role
 
 #### Pre-builded packages
 
-limited packages available: https://github.com/simianlabs/saltgopher/releases
+Limited packages available: https://github.com/simianlabs/saltgopher/releases
 
 ### Maintainer
 Dev: Stefan Monko || smonko@simianlabs.io  

@@ -62,8 +62,16 @@ func (c *saltClient) sentJob(job saltJobPostData) (*http.Response, error) {
 }
 
 //get minions info
-func (c *saltClient) getMinionsInfo() (*http.Response, error) {
-	resp, err := c.Connector.get("/minions")
+func (c *saltClient) getMinionsInfo(m string) (*http.Response, error) {
+
+	var endpoint string
+
+	if m != "" {
+		endpoint = fmt.Sprintf("/minions/%s", m)
+	} else {
+		endpoint = "/minions"
+	}
+	resp, err := c.Connector.get(endpoint)
 	if err != nil {
 		fmt.Println("Error while getting minions info:", err)
 		return nil, err
