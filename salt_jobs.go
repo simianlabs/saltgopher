@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/Jeffail/gabs"
@@ -41,10 +42,9 @@ type jobDetails struct {
 }
 
 type jobResult struct {
-	Return struct {
-		Retcode int `json:"retcode"`
-		Return  bool
-	} `json:"return"`
+	Retcode   int                          `json:"retcode"`
+	Success   bool                         `json:"success"`
+	JobResult map[string]map[string]string `json:"return"`
 }
 
 func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
@@ -199,7 +199,16 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 			} else {
 				args = strings.Join(jj.Arguments, "")
 			}
-			fmt.Println(j.Job[0].Result)
+
+			var resultSlice []string
+			for k, results := range jj.Result {
+				// fmt.Println("Minion:", k)
+				// fmt.Println("Results:", results.Retcode)
+				// fmt.Println("Results:", results.JobResult)
+				// fmt.Println("Results:", results.Success)
+				resultSlice = append(resultSlice, k+"\n  Return code: "+strconv.Itoa(results.Retcode)+"\n  Success: "+strconv.FormatBool(results.Success))
+
+			}
 
 			attachment := slack.Attachment{
 				Text:  "`" + jj.ID + "`",
@@ -210,30 +219,30 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 						Value: "*Start time*: " + jj.StartTime,
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + strings.Join(jj.Minions, "\n"),
+						Value: "*Minions*: \n" + strings.Join(jj.Minions, "\n- "),
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + jj.Function,
+						Value: "*Function*: " + jj.Function,
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + args,
+						Value: "*Arguments*: " + args,
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + jj.User,
+						Value: "*User*: " + jj.User,
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + jj.Target,
+						Value: "*Target*: " + jj.Target,
 					},
 					slack.AttachmentField{
-						Value: "*Start time*: " + jj.TargetType,
+						Value: "*Target type*: " + jj.TargetType,
+					},
+					slack.AttachmentField{
+						Value: "*Result*: \n" + strings.Join(resultSlice, "\n\n"),
 					},
 				},
 			}
 
 			rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
-
-			// for jobID, details := range j.Jobs[0].Result {
-			// }
 
 		}
 
