@@ -79,3 +79,22 @@ func (c *saltClient) getMinionsInfo(m string) (*http.Response, error) {
 	return resp, nil
 
 }
+
+// get jobs info
+func (c *saltClient) getJobs(m string) (*http.Response, error) {
+
+	var endpoint string
+
+	if m != "" {
+		endpoint = fmt.Sprintf("/jobs/%s", m)
+	} else {
+		endpoint = "/jobs"
+	}
+	resp, err := c.Connector.get(endpoint)
+	if err != nil {
+		fmt.Println("Error while getting jobs list:", err)
+		return nil, err
+	}
+	return resp, nil
+
+}

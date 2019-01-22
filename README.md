@@ -14,16 +14,19 @@ Current version: `0.3.0` available features:
 * Executing jobs on salt-minions
 * Respond to direct message
 * Minions listing and details
+* Support for listing jobs
 
 Currently in development or planned:
 * Complex role management
 * Full Access Control List  
   * Same principle as SaltStack itself have
 * Aliases
-* Support for runners and wheels
-* Support for listing jobs
+* Support for runners 
+* Support for wheels
 * Slash commands
 * Channel listener
+* Localisation
+* Support for Environment variables config
 * Auto deployments (GCP, Heroku, AWS ...)
 * and more...
 

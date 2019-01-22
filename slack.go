@@ -138,6 +138,9 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 	saltMatch, _ := regexp.MatchString("^salt *", text)
 	fmt.Println("Salt match", saltMatch)
 
+	saltJobDetailMatch, _ := regexp.MatchString("^job [a-z0-9A-Z]+ details", text)
+	fmt.Println("Job match", saltJobDetailMatch)
+
 	acceptedSaltGetMinionInfo := map[string]bool{
 		"get minions info": true,
 	}
@@ -145,6 +148,11 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 	acceptedSaltListMinions := map[string]bool{
 		"get minions list": true,
 		"list minions":     true,
+	}
+
+	acceptedSaltListJobs := map[string]bool{
+		"get jobs list": true,
+		"list jobs":     true,
 	}
 
 	// Role subcommands
@@ -155,6 +163,11 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 
 		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
 		newSaltResponse(rtm, msg, config)
+
+	} else if saltJobDetailMatch {
+
+		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
+		getJobDetails(rtm, msg, config)
 
 	} else if setRoleMatch {
 
@@ -174,6 +187,11 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string, config botC
 
 		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
 		listMinions(rtm, msg, config)
+
+	} else if acceptedSaltListJobs[text] {
+
+		rtm.SendMessage(rtm.NewOutgoingMessage(responceHoldOn[r], msg.Channel))
+		getJobsList(rtm, msg, config)
 
 	} else if acceptedRoles[text] {
 
@@ -235,6 +253,14 @@ func botHelp(rtm *slack.RTM, msg *slack.MessageEvent) {
 			slack.AttachmentField{
 				Title: "\"Get minions info\"",
 				Value: "Get detailed informations about all minions",
+			},
+			slack.AttachmentField{
+				Title: "\"Get jobs list\"",
+				Value: "Get list of all jobs executed",
+			},
+			slack.AttachmentField{
+				Title: "\"Get details of job JID\"",
+				Value: "Get details for selected job.",
 			},
 			slack.AttachmentField{
 				Title: "\"List minions\"",
