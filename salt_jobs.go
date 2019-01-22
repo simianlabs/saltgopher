@@ -29,25 +29,21 @@ type jobDetailsResponse struct {
 }
 
 type jobDetails struct {
-	ID         string            `json:"jid"`
-	Function   string            `json:"Function"`
-	Target     string            `json:"Target"`
-	User       string            `json:"User"`
-	StartTime  string            `json:"StartTime"`
-	TargetType string            `json:"Target-Type"`
-	Arguments  []string          `json:"Arguments"`
-	Minions    []string          `json:"Minions"`
-	Result     map[string]Result `json:"Result"`
+	ID         string               `json:"jid"`
+	Function   string               `json:"Function"`
+	Target     string               `json:"Target"`
+	User       string               `json:"User"`
+	StartTime  string               `json:"StartTime"`
+	TargetType string               `json:"Target-Type"`
+	Arguments  []string             `json:"Arguments"`
+	Minions    []string             `json:"Minions"`
+	Result     map[string]jobResult `json:"Result"`
 }
 
-// Result ...
-type Result struct {
+type jobResult struct {
 	Return struct {
-		// PID     int    `json:"pid"`
 		Retcode int `json:"retcode"`
-		// Stdout  string `json:"stdout"`
-		// Stderr  string `json:"stderr"`
-		Return bool
+		Return  bool
 	} `json:"return"`
 }
 
@@ -108,9 +104,7 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 							},
 						},
 					}
-
 					rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
-
 				}
 
 			} else {
@@ -133,7 +127,6 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 					}
 
 					rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
-
 				}
 
 				for _, k := range keys {
@@ -150,11 +143,8 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 					}
 
 					rtm.PostMessage(sendingUser.ID, slack.MsgOptionAttachments(attachment))
-
 				}
-
 			}
-
 		}
 
 	} else {
