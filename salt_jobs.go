@@ -42,9 +42,9 @@ type jobDetails struct {
 }
 
 type jobResult struct {
-	Retcode   int                          `json:"retcode"`
-	Success   bool                         `json:"success"`
-	JobResult map[string]map[string]string `json:"return"`
+	Retcode int  `json:"retcode"`
+	Success bool `json:"success"`
+	// JobResult []string `json:"return"`
 }
 
 func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
@@ -75,6 +75,7 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 
 			err = json.Unmarshal(body, &j)
 
+			// Sorting order of result
 			var keys []string
 			for k := range j.Jobs[0] {
 				keys = append(keys, k)
@@ -83,7 +84,7 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 			}
 			sort.Sort(sort.Reverse(sort.StringSlice(keys)))
 
-			fmt.Println(keys)
+			// fmt.Println(keys)
 
 			jobsCount := len(j.Jobs[0])
 			if jobsCount <= 6 {
@@ -95,7 +96,6 @@ func getJobsList(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 					details := j.Jobs[0][k]
 
 					attachment := slack.Attachment{
-						// Text:  "`" + jobID + "`",
 						Color: "#4d004d",
 
 						Fields: []slack.AttachmentField{
@@ -180,12 +180,13 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 			body, _ := ioutil.ReadAll(resp.Body)
 
 			// A bit formating for nicer slack output:
-			jsonParsed, err := gabs.ParseJSON(body)
+			returnParsed, err := gabs.ParseJSON(body)
 			if err != nil {
 				fmt.Println("Error:", err)
 			}
 
-			fmt.Println(jsonParsed)
+			rp := returnParsed.Search("return")
+			fmt.Println(rp)
 
 			j := jobDetailsResponse{}
 
@@ -193,21 +194,12 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 
 			jj := j.Job[0]
 
+			// checking for arguments and replacing empty string with none
 			var args string
 			if len(jj.Arguments) == 0 {
 				args = "None"
 			} else {
 				args = strings.Join(jj.Arguments, "")
-			}
-
-			var resultSlice []string
-			for k, results := range jj.Result {
-				// fmt.Println("Minion:", k)
-				// fmt.Println("Results:", results.Retcode)
-				// fmt.Println("Results:", results.JobResult)
-				// fmt.Println("Results:", results.Success)
-				resultSlice = append(resultSlice, k+"\n  Return code: "+strconv.Itoa(results.Retcode)+"\n  Success: "+strconv.FormatBool(results.Success))
-
 			}
 
 			attachment := slack.Attachment{
@@ -236,13 +228,39 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 					slack.AttachmentField{
 						Value: "*Target type*: " + jj.TargetType,
 					},
-					slack.AttachmentField{
-						Value: "*Result*: \n" + strings.Join(resultSlice, "\n\n"),
-					},
 				},
 			}
 
 			rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
+
+			// var resultSlice []string
+			for k, results := range jj.Result {
+				//parsing magic
+				fmt.Println(rp.Search(k).StringIndent("", "  "))
+				// fmt.Println(returrnParsed.Search("return"))
+
+				// resultSlice = append(resultSlice, k+"\n  Return code: "+strconv.Itoa(results.Retcode)+
+				// 	"\n  Success: "+strconv.FormatBool(results.Success)+"\n  Return: ")
+
+				attachment := slack.Attachment{
+					Text:  "`" + k + "`",
+					Color: "#800040",
+
+					Fields: []slack.AttachmentField{
+						slack.AttachmentField{
+							Value: "*Return code*: " + strconv.Itoa(results.Retcode),
+						},
+						slack.AttachmentField{
+							Value: "*Success*: " + strconv.FormatBool(results.Success),
+						},
+						slack.AttachmentField{
+							Value: "*Return*: " + rp.Search(k).StringIndent("", "  "),
+						},
+					},
+				}
+				rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
+
+			}
 
 		}
 
