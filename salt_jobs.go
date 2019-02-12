@@ -233,14 +233,9 @@ func getJobDetails(rtm *slack.RTM, msg *slack.MessageEvent, config botConfig) {
 
 			rtm.PostMessage(msg.Channel, slack.MsgOptionAttachments(attachment))
 
-			// var resultSlice []string
 			for k, results := range jj.Result {
 				//parsing magic
 				fmt.Println(rp.Search(k).StringIndent("", "  "))
-				// fmt.Println(returrnParsed.Search("return"))
-
-				// resultSlice = append(resultSlice, k+"\n  Return code: "+strconv.Itoa(results.Retcode)+
-				// 	"\n  Success: "+strconv.FormatBool(results.Success)+"\n  Return: ")
 
 				attachment := slack.Attachment{
 					Text:  "`" + k + "`",

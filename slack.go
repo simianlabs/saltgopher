@@ -268,7 +268,7 @@ func botHelp(rtm *slack.RTM, msg *slack.MessageEvent) {
 			},
 			slack.AttachmentField{
 				Title: "\"set role ROLENAME to @USER\"",
-				Value: "Add role to user.\n*gopheradmin* - SaltGopher manangement, assign roles etc.\n*saltadmin - Free to use all Salt functionality\n*saltviewer* - Can list jobs and minions info",
+				Value: "Add role to user.\n Available roles:\n  - *gopheradmin* - SaltGopher manangement, assign roles etc.\n  - *saltadmin* - Free to use all Salt functionality\n  - *saltviewer* - Can list jobs and minions info",
 			},
 			slack.AttachmentField{
 				Title: "\"Show my roles\"",

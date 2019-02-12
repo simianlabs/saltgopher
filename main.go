@@ -55,10 +55,6 @@ func main() {
 	config, _ := loadConfiguration("config.json")
 	fmt.Print("**************************************************** \n")
 
-	// DEVELOP SECTION
-
-	// DEVELOP SECTION
-
 	api := slack.New(config.Slack.Token)
 	rtm := api.NewRTM()
 	go rtm.ManageConnection()
